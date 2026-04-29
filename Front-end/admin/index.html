@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+
+  <!-- ADMIN NAVBAR -->
+  <nav>
+    <a href="index.html" class="logo">⚙️ Admin Panel</a>
+    <div class="nav-links">
+      <a href="index.html">Dashboard</a>
+      <a href="products.html">Products</a>
+      <a href="orders.html">Orders</a>
+      <a href="../index.html">← Store</a>
+      <a href="#" id="logoutLink">Logout</a>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <h2 class="page-title">Dashboard Overview</h2>
+
+    <!-- STATS CARDS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-info">
+          <h3 id="totalOrders">...</h3>
+          <p>Total Orders</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
+          <h3 id="totalRevenue">...</h3>
+          <p>Total Revenue</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <h3 id="totalCustomers">...</h3>
+          <p>Total Customers</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛍️</div>
+        <div class="stat-info">
+          <h3 id="totalProducts">...</h3>
+          <p>Total Products</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT ORDERS -->
+    <h2 class="page-title" style="margin-top:40px;">Recent Orders</h2>
+    <div id="recentOrders">Loading...</div>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/admin/dashboard.js"></script>
+  <script>
+    // Redirect if not admin
+    if (!isLoggedIn()) window.location.href = '../login.html';
+
+    document.getElementById('logoutLink').addEventListener('click', () => {
+      removeToken();
+      window.location.href = '../login.html';
+    });
+  </script>
+
+</body>
+</html>

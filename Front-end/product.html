@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Details</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- CART SIDE PANEL -->
+  <div id="cartOverlay" class="cart-overlay" onclick="closeCart()"></div>
+  <div id="cartPanel" class="cart-panel">
+    <div class="cart-panel-header">
+      <h3>🛒 Your Cart</h3>
+      <button onclick="closeCart()" class="close-btn">✕</button>
+    </div>
+    <div id="panelCartItems" class="panel-cart-items">Loading...</div>
+    <div id="panelCartFooter" class="panel-cart-footer"></div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="index.html" class="logo">🛒 Online Store</a>
+    <div class="nav-links">
+      <a href="index.html">Products</a>
+      <a href="cart.html">Cart</a>
+      <a href="orders.html">Orders</a>
+      <a href="login.html" id="loginLink">Login</a>
+      <a href="#" id="logoutLink" style="display:none;">Logout</a>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <a href="index.html" style="display:inline-block; margin-bottom:20px; color:#2c3e50;">
+      ← Back to Products
+    </a>
+    <div id="productDetails">Loading...</div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/product.js"></script>
+  <script>
+    if (isLoggedIn()) {
+      document.getElementById('loginLink').style.display = 'none';
+      document.getElementById('logoutLink').style.display = 'inline';
+    }
+
+    document.getElementById('logoutLink').addEventListener('click', () => {
+      removeToken();
+      window.location.href = 'login.html';
+    });
+  </script>
+
+</body>
+</html>

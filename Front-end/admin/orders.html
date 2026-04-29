@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Orders</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+
+  <!-- ADMIN NAVBAR -->
+  <nav>
+    <a href="index.html" class="logo">⚙️ Admin Panel</a>
+    <div class="nav-links">
+      <a href="index.html">Dashboard</a>
+      <a href="products.html">Products</a>
+      <a href="orders.html">Orders</a>
+      <a href="../index.html">← Store</a>
+      <a href="#" id="logoutLink">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2 class="page-title">📦 Manage Orders</h2>
+    <div id="ordersTable">Loading...</div>
+  </div>
+
+  <!-- ORDER DETAILS MODAL -->
+  <div id="modalOverlay" class="cart-overlay" onclick="closeModal()"></div>
+  <div id="orderModal" class="order-modal">
+    <div class="order-modal-header">
+      <h3 id="modalTitle">Order Details</h3>
+      <button onclick="closeModal()" class="close-btn">✕</button>
+    </div>
+    <div id="modalContent" class="order-modal-content"></div>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/admin/orders.js"></script>
+  <script>
+    if (!isLoggedIn()) window.location.href = '../login.html';
+
+    document.getElementById('logoutLink').addEventListener('click', () => {
+      removeToken();
+      window.location.href = '../login.html';
+    });
+  </script>
+
+</body>
+</html>

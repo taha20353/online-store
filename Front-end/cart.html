@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cart</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="index.html" class="logo">🛒 Online Store</a>
+    <div class="nav-links">
+      <a href="index.html">Products</a>
+      <a href="cart.html">Cart</a>
+      <a href="orders.html">Orders</a>
+      <a href="login.html" id="loginLink">Login</a>
+      <a href="#" id="logoutLink" style="display:none;">Logout</a>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <h2 class="page-title">🛒 My Cart</h2>
+    <div id="cartItems">
+      <p>Loading cart...</p>
+    </div>
+
+    <!-- TOTAL & PLACE ORDER -->
+    <div id="cartSummary" style="display:none;">
+      <div class="cart-item" style="justify-content: flex-end; gap: 20px;">
+        <h3>Total: $<span id="cartTotal">0.00</span></h3>
+        <button class="btn btn-success" style="width:auto; padding: 10px 30px;" onclick="handlePlaceOrder()">
+          ✅ Place Order
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/cart.js"></script>
+  <script>
+    // Navbar auth state
+    if (isLoggedIn()) {
+      document.getElementById('loginLink').style.display = 'none';
+      document.getElementById('logoutLink').style.display = 'inline';
+    }
+
+    document.getElementById('logoutLink').addEventListener('click', () => {
+      removeToken();
+      window.location.href = 'login.html';
+    });
+  </script>
+
+</body>
+</html>
