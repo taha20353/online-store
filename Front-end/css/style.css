@@ -493,3 +493,25 @@ h2.page-title {
   border-radius: 10px;
   margin-bottom: 25px;
 }
+
+/* ─── GOOGLE BUTTON ─── */
+.google-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  font-weight: bold;
+  background: white;
+  transition: box-shadow 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+
+.google-btn:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
