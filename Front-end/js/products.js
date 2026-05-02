@@ -1,29 +1,83 @@
 const grid = document.getElementById('productsGrid');
 
-const loadProducts = async () => {
-  const products = await api.getProducts();
+const loadProduct = async () => {
+  const id = getIdFromURL();
 
-  if (!products.length) {
-    grid.innerHTML = '<p class="empty">No products found.</p>';
+  if (!id) {
+    productDetails.innerHTML = '<p class="empty">Product not found.</p>';
     return;
   }
 
-  grid.innerHTML = products.map(p => `
-    <div class="product-card">
-      <a href="product.html?id=${p.id}" style="text-decoration:none; color:inherit;">
-        ${p.image_url ? `<img src="${p.image_url}" alt="${p.name}" class="product-card-img" />` : '<div class="product-card-no-img">No Image</div>'}
-        <h3>${p.name}</h3>
-        <p class="category">📦 ${p.category}</p>
-        <p class="price">$${p.price}</p>
-        <p class="stock">✅ ${p.stock > 0 ? p.stock + ' in stock' : '❌ Out of stock'}</p>
-      </a>
-      <button class="btn btn-primary"
-        onclick="addToCart(${p.id})"
-        ${p.stock === 0 ? 'disabled style="background:#ccc; cursor:not-allowed;"' : ''}>
-        ${p.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-      </button>
+  const product = await api.getProduct(id);
+
+  if (product.error) {
+    productDetails.innerHTML = '<p class="empty">Product not found.</p>';
+    return;
+  }
+
+  // Build images array
+  const images = product.images && product.images.length > 0
+    ? product.images
+    : product.image_url
+      ? [{ image_url: product.image_url }]
+      : [];
+
+  productDetails.innerHTML = `
+    <div class="product-details-card">
+
+      <!-- IMAGE GALLERY -->
+      ${images.length > 0 ? `
+        <div class="product-gallery">
+          <div class="main-image-container">
+            <img id="mainImage" src="${images[0].image_url}" 
+                 alt="${product.name}" class="main-image" />
+          </div>
+          ${images.length > 1 ? `
+            <div class="thumbnail-container">
+              ${images.map((img, index) => `
+                <img src="${img.image_url}" 
+                     class="thumbnail ${index === 0 ? 'active' : ''}"
+                     onclick="changeImage('${img.image_url}', this)" />
+              `).join('')}
+            </div>
+          ` : ''}
+        </div>
+      ` : '<div class="product-card-no-img">No Image</div>'}
+
+      <!-- PRODUCT INFO -->
+      <div class="product-details-info">
+        <span class="category-badge">📦 ${product.category}</span>
+        <h1>${product.name}</h1>
+        <p class="product-description">${product.description || 'No description available.'}</p>
+        <p class="product-price">$${product.price}</p>
+        <p class="product-stock ${product.stock > 0 ? 'in-stock' : 'out-stock'}">
+          ${product.stock > 0 ? `✅ ${product.stock} in stock` : '❌ Out of stock'}
+        </p>
+
+        <div class="quantity-selector">
+          <label>Quantity:</label>
+          <div class="quantity-controls">
+            <button onclick="changeQty(-1)">−</button>
+            <span id="qty">1</span>
+            <button onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" style="width:200px;"
+          onclick="addToCart(${product.id})"
+          ${product.stock === 0 ? 'disabled' : ''}>
+          🛒 Add to Cart
+        </button>
+      </div>
     </div>
-  `).join('');
+  `;
+};
+
+// Change main image when thumbnail clicked
+const changeImage = (url, el) => {
+  document.getElementById('mainImage').src = url;
+  document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
 };
 
 // ─── CART PANEL ───────────────────────────────────────

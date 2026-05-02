@@ -22,9 +22,10 @@ const getAllProducts = (req, res) => {
   });
 };
 
-// GET single product by ID
 const getProductById = (req, res) => {
   const { id } = req.params;
+  
+  // Get product details
   const sql = `
     SELECT p.id, p.name, p.description, p.price, p.stock, 
            c.name AS category,
@@ -45,7 +46,16 @@ const getProductById = (req, res) => {
     if (results.length === 0) {
       return res.status(404).json({ message: 'Product not found' });
     }
-    res.status(200).json(results[0]);
+
+    const product = results[0];
+
+    // Get all images for this product
+    const imagesSql = 'SELECT * FROM product_images WHERE product_id = ? ORDER BY is_primary DESC';
+    db.query(imagesSql, [id], (err, images) => {
+      if (err) return res.status(500).json({ error: err.message });
+      product.images = images;
+      res.status(200).json(product);
+    });
   });
 };
 
