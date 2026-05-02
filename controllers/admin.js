@@ -110,17 +110,29 @@ const updateProduct = (req, res) => {
   });
 };
 
-// DELETE product
 const deleteProduct = (req, res) => {
   const { id } = req.params;
 
-  const sql = 'DELETE FROM products WHERE id = ?';
-  db.query(sql, [id], (err, results) => {
+  // Delete related records first
+  db.query('DELETE FROM product_images WHERE product_id = ?', [id], (err) => {
     if (err) return res.status(500).json({ error: err.message });
-    if (results.affectedRows === 0) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    res.status(200).json({ message: '✅ Product deleted!' });
+
+    db.query('DELETE FROM cart_items WHERE product_id = ?', [id], (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+
+      db.query('DELETE FROM order_items WHERE product_id = ?', [id], (err) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        // Now delete the product
+        db.query('DELETE FROM products WHERE id = ?', [id], (err, results) => {
+          if (err) return res.status(500).json({ error: err.message });
+          if (results.affectedRows === 0) {
+            return res.status(404).json({ message: 'Product not found' });
+          }
+          res.status(200).json({ message: '✅ Product deleted!' });
+        });
+      });
+    });
   });
 };
 
