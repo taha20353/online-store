@@ -122,7 +122,7 @@ const editProduct = async (id) => {
   document.getElementById('cancelEdit').style.display = 'inline-block';
 
   loadExistingImages(id);
-  
+
   // Scroll to form
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
@@ -134,11 +134,12 @@ const cancelEdit = () => {
   document.getElementById('productDescription').value = '';
   document.getElementById('productPrice').value = '';
   document.getElementById('productStock').value = '';
-  document.getElementById('productImage').value = '';
+  document.getElementById('productImages').value = '';
+  document.getElementById('imagePreview').innerHTML = '';
+  document.getElementById('existingImages').innerHTML = '';
   document.getElementById('formTitle').textContent = '➕ Add New Product';
   document.getElementById('cancelEdit').style.display = 'none';
 };
-
 // Delete product
 const deleteProduct = async (id) => {
   if (!confirm('Are you sure you want to delete this product?')) return;
