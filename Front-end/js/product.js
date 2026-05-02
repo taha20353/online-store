@@ -21,9 +21,36 @@ const loadProduct = async () => {
     return;
   }
 
-    productDetails.innerHTML = `
+  // Build images array
+  const images = product.images && product.images.length > 0
+    ? product.images
+    : product.image_url
+      ? [{ image_url: product.image_url }]
+      : [];
+
+  productDetails.innerHTML = `
     <div class="product-details-card">
-      ${product.image_url ? `<img src="${product.image_url}" alt="${product.name}" class="product-details-img" />` : ''}
+
+      <!-- IMAGE GALLERY -->
+      ${images.length > 0 ? `
+        <div class="product-gallery">
+          <div class="main-image-container">
+            <img id="mainImage" src="${images[0].image_url}" 
+                 alt="${product.name}" class="main-image" />
+          </div>
+          ${images.length > 1 ? `
+            <div class="thumbnail-container">
+              ${images.map((img, index) => `
+                <img src="${img.image_url}" 
+                     class="thumbnail ${index === 0 ? 'active' : ''}"
+                     onclick="changeImage('${img.image_url}', this)" />
+              `).join('')}
+            </div>
+          ` : ''}
+        </div>
+      ` : '<div class="product-card-no-img">No Image</div>'}
+
+      <!-- PRODUCT INFO -->
       <div class="product-details-info">
         <span class="category-badge">📦 ${product.category}</span>
         <h1>${product.name}</h1>
@@ -50,6 +77,13 @@ const loadProduct = async () => {
       </div>
     </div>
   `;
+};
+
+// Change main image when thumbnail clicked
+const changeImage = (url, el) => {
+  document.getElementById('mainImage').src = url;
+  document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
 };
 
 // ─── QUANTITY SELECTOR ────────────────────────────────
