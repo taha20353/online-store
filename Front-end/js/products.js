@@ -1,6 +1,6 @@
 const grid = document.getElementById('productsGrid');
 
-const loadProducts = async () => {
+const loadProduct = async () => {
   const id = getIdFromURL();
 
   if (!id) {
@@ -190,4 +190,4 @@ const addToCart = async (productId) => {
   }
 };
 
-loadProducts();
+loadProduct();
