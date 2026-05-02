@@ -159,8 +159,77 @@ const getStats = (req, res) => {
   });
 };
 
+const { cloudinary } = require('../config/cloudinary');
+
+// UPLOAD product images
+const uploadImages = (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ message: '❌ No images uploaded' });
+  }
+
+  const productId = req.params.id;
+  const isPrimary = req.body.is_primary === 'true';
+
+  // Insert all uploaded images into product_images table
+  const images = req.files.map((file, index) => [
+    productId,
+    file.path,
+    index === 0 && isPrimary ? 1 : 0
+  ]);
+
+  const sql = 'INSERT INTO product_images (product_id, image_url, is_primary) VALUES ?';
+  db.query(sql, [images], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(201).json({
+      message: '✅ Images uploaded successfully!',
+      images: req.files.map(f => f.path)
+    });
+  });
+};
+
+// DELETE product image
+const deleteImage = (req, res) => {
+  const { id } = req.params;
+
+  // Get image url first to delete from cloudinary
+  db.query('SELECT * FROM product_images WHERE id = ?', [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Image not found' });
+    }
+
+    const imageUrl = results[0].image_url;
+
+    // Extract public_id from cloudinary URL
+    const parts = imageUrl.split('/');
+    const filename = parts[parts.length - 1];
+    const publicId = `online-store/${filename.split('.')[0]}`;
+
+    // Delete from Cloudinary
+    cloudinary.uploader.destroy(publicId, (err) => {
+      if (err) console.error('Cloudinary delete error:', err);
+    });
+
+    // Delete from database
+    db.query('DELETE FROM product_images WHERE id = ?', [id], (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.status(200).json({ message: '✅ Image deleted!' });
+    });
+  });
+};
+
+// GET product images
+const getProductImages = (req, res) => {
+  const { id } = req.params;
+  db.query('SELECT * FROM product_images WHERE product_id = ?', [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(200).json(results);
+  });
+};
+
 module.exports = {
   getAllOrders, getOrderDetails, updateOrderStatus,
   getAllProducts, addProduct, updateProduct, deleteProduct,
-  getCategories, getStats
+  getCategories, getStats,
+  uploadImages, deleteImage, getProductImages
 };

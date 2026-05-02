@@ -82,14 +82,14 @@ const api = {
   },
 
   // Update cart item quantity
-updateCartItem: async (id, quantity) => {
-  const res = await fetch(`${API_URL}/cart/${id}`, {
-    method: 'PUT',
-    headers: authHeaders(),
-    body: JSON.stringify({ quantity })
-  });
-  return res.json();
-},
+  updateCartItem: async (id, quantity) => {
+    const res = await fetch(`${API_URL}/cart/${id}`, {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify({ quantity })
+    });
+    return res.json();
+  },
 
   // ─── ORDERS ─────────────────────────────────────────
   // Place order
@@ -186,6 +186,35 @@ updateCartItem: async (id, quantity) => {
 
   adminGetCategories: async () => {
     const res = await fetch(`${API_URL}/admin/categories`, {
+      headers: authHeaders()
+    });
+    return res.json();
+  },
+
+  // Upload product images
+  adminUploadImages: async (productId, formData) => {
+    const res = await fetch(`${API_URL}/admin/products/${productId}/images`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${getToken()}`
+      },
+      body: formData  // FormData handles multipart/form-data
+    });
+    return res.json();
+  },
+
+  // Get product images
+  adminGetProductImages: async (productId) => {
+    const res = await fetch(`${API_URL}/admin/products/${productId}/images`, {
+      headers: authHeaders()
+    });
+    return res.json();
+  },
+
+  // Delete product image
+  adminDeleteImage: async (imageId) => {
+    const res = await fetch(`${API_URL}/admin/images/${imageId}`, {
+      method: 'DELETE',
       headers: authHeaders()
     });
     return res.json();

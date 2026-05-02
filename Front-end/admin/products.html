@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin - Products</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/admin.css" />
 </head>
+
 <body>
 
   <!-- ADMIN NAVBAR -->
@@ -52,24 +54,26 @@
         <label>Description</label>
         <textarea id="productDescription" placeholder="Enter product description"></textarea>
       </div>
+      <!-- updated uploud Images -->
       <div class="form-group">
-        <label>Image URL</label>
-        <input type="text" id="productImage" placeholder="https://..." />
+        <label>Product Images</label>
+        <input type="file" id="productImages" multiple accept="image/*" />
+        <small style="color:#888;">Select up to 5 images</small>
       </div>
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <button class="btn btn-primary" style="width:auto;" onclick="saveProduct()">
-          💾 Save Product
-        </button>
-        <button class="btn btn-danger" style="width:auto; display:none;"
-          id="cancelEdit" onclick="cancelEdit()">
-          Cancel
-        </button>
-      </div>
-      <div id="productMessage"></div>
+      <div id="imagePreview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;"></div>
+      <div id="existingImages" style="margin-top:10px;"></div>
+      <button class="btn btn-primary" style="width:auto;" onclick="saveProduct()">
+        💾 Save Product
+      </button>
+      <button class="btn btn-danger" style="width:auto; display:none;" id="cancelEdit" onclick="cancelEdit()">
+        Cancel
+      </button>
     </div>
+    <div id="productMessage"></div>
+  </div>
 
-    <!-- PRODUCTS TABLE -->
-    <div id="productsTable">Loading...</div>
+  <!-- PRODUCTS TABLE -->
+  <div id="productsTable">Loading...</div>
   </div>
 
   <script src="../js/api.js"></script>
@@ -84,4 +88,5 @@
   </script>
 
 </body>
+
 </html>
