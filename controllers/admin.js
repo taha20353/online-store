@@ -163,6 +163,10 @@ const { cloudinary } = require('../config/cloudinary');
 
 // UPLOAD product images
 const uploadImages = (req, res) => {
+  console.log('📸 Upload request received');
+  console.log('Files:', req.files);
+  console.log('Params:', req.params);
+
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({ message: '❌ No images uploaded' });
   }
@@ -170,16 +174,20 @@ const uploadImages = (req, res) => {
   const productId = req.params.id;
   const isPrimary = req.body.is_primary === 'true';
 
-  // Insert all uploaded images into product_images table
   const images = req.files.map((file, index) => [
     productId,
     file.path,
     index === 0 && isPrimary ? 1 : 0
   ]);
 
+  console.log('Images to insert:', images);
+
   const sql = 'INSERT INTO product_images (product_id, image_url, is_primary) VALUES ?';
   db.query(sql, [images], (err) => {
-    if (err) return res.status(500).json({ error: err.message });
+    if (err) {
+      console.error('DB Error:', err.message);
+      return res.status(500).json({ error: err.message });
+    }
     res.status(201).json({
       message: '✅ Images uploaded successfully!',
       images: req.files.map(f => f.path)
