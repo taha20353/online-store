@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Product Details</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body>
   <!-- CART SIDE PANEL -->
   <div id="cartOverlay" class="cart-overlay" onclick="closeCart()"></div>
@@ -50,7 +52,13 @@
       removeToken();
       window.location.href = 'login.html';
     });
+
+    const toggleMenu = () => {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    };
   </script>
 
 </body>
+
 </html>
