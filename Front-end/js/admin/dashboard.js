@@ -20,6 +20,7 @@ const loadRecentOrders = async () => {
   const recent = orders.slice(0, 5);
 
   container.innerHTML = `
+    <div class="admin-table-wrapper">
     <table class="admin-table">
       <thead>
         <tr>
@@ -46,6 +47,7 @@ const loadRecentOrders = async () => {
         `).join('')}
       </tbody>
     </table>
+    </div>
   `;
 };
 

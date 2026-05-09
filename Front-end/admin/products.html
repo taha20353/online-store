@@ -21,6 +21,22 @@
       <a href="../index.html">← Store</a>
       <a href="#" id="logoutLink">Logout</a>
     </div>
+
+    <!-- Hamburger for mobile -->
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Mobile menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="index.html">Dashboard</a>
+      <a href="products.html">Products</a>
+      <a href="orders.html">Orders</a>
+      <a href="../index.html">← Store</a>
+      <a href="#" id="mobileLogoutLink">Logout</a>
+    </div>
   </nav>
 
   <div class="container">
@@ -85,6 +101,11 @@
       removeToken();
       window.location.href = '../login.html';
     });
+
+    const toggleMenu = () => {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    };
   </script>
 
 </body>

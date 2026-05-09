@@ -8,6 +8,7 @@ const loadOrders = async () => {
   }
 
   container.innerHTML = `
+    <div class="admin-table-wrapper">
     <table class="admin-table">
       <thead>
         <tr>
@@ -46,6 +47,7 @@ const loadOrders = async () => {
         `).join('')}
       </tbody>
     </table>
+    </div>
   `;
 };
 

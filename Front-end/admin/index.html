@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/admin.css" />
 </head>
+
 <body>
 
   <!-- ADMIN NAVBAR -->
@@ -18,6 +20,22 @@
       <a href="orders.html">Orders</a>
       <a href="../index.html">← Store</a>
       <a href="#" id="logoutLink">Logout</a>
+    </div>
+
+    <!-- Hamburger for mobile -->
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Mobile menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="index.html">Dashboard</a>
+      <a href="products.html">Products</a>
+      <a href="orders.html">Orders</a>
+      <a href="../index.html">← Store</a>
+      <a href="#" id="mobileLogoutLink">Logout</a>
     </div>
   </nav>
 
@@ -72,7 +90,13 @@
       removeToken();
       window.location.href = '../login.html';
     });
+
+    const toggleMenu = () => {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    };
   </script>
 
 </body>
+
 </html>

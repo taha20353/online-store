@@ -26,6 +26,7 @@ const loadProducts = async () => {
   }
 
   container.innerHTML = `
+    <div class="admin-table-wrapper">
     <table class="admin-table">
       <thead>
         <tr>
@@ -57,6 +58,7 @@ const loadProducts = async () => {
         `).join('')}
       </tbody>
     </table>
+    </div>
   `;
 };
 
