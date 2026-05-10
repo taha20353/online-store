@@ -57,16 +57,35 @@
     </div>
   </div>
 
-  <script src="js/api.js"></script>
-  <script src="js/products.js"></script>
-  <script>
-    // Show/hide login or logout based on auth state
+<script src="js/api.js"></script>
+<script src="js/products.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('Token:', localStorage.getItem('token'));
+    console.log('isLoggedIn:', isLoggedIn());
+
+    // Desktop navbar
     if (isLoggedIn()) {
       document.getElementById('loginLink').style.display = 'none';
       document.getElementById('logoutLink').style.display = 'inline';
     }
 
-    document.getElementById('logoutLink').addEventListener('click', () => {
+    // Mobile menu
+    if (isLoggedIn()) {
+      const mobileLogin = document.getElementById('mobileLoginLink');
+      const mobileLogout = document.getElementById('mobileLogoutLink');
+      if (mobileLogin) mobileLogin.style.display = 'none';
+      if (mobileLogout) mobileLogout.style.display = 'block';
+    }
+
+    // Desktop logout
+    document.getElementById('logoutLink')?.addEventListener('click', () => {
+      removeToken();
+      window.location.href = 'login.html';
+    });
+
+    // Mobile logout
+    document.getElementById('mobileLogoutLink')?.addEventListener('click', () => {
       removeToken();
       window.location.href = 'login.html';
     });
@@ -75,7 +94,11 @@
       document.getElementById('hamburger').classList.toggle('open');
       document.getElementById('mobileMenu').classList.toggle('open');
     };
-  </script>
+
+    // Make toggleMenu global
+    window.toggleMenu = toggleMenu;
+  });
+</script>
 
 </body>
 
