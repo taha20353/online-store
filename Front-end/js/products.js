@@ -132,7 +132,7 @@ const addToCart = async (productId) => {
   if (isLoggedIn()){
     const result = await api.addToCart(productId, 1);
     if (result.message) {
-      openCart(); // ✅ open panel instead of alert
+      // ✅ open panel instead of alert
     }
   }
 };
