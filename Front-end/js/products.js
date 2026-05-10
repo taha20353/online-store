@@ -128,6 +128,13 @@ const addToCart = async (productId) => {
     window.location.href = 'login.html';
     return;
   }
+  
+  // Check 2 — double check token directly
+  const token = localStorage.getItem('token');
+  if (!token) {
+    window.location.href = 'login.html';
+    return;
+  }
 
   const result = await api.addToCart(productId, 1);
   if (result.message) {
