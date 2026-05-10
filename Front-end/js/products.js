@@ -125,7 +125,6 @@ const checkout = async () => {
 
 const addToCart = async (productId) => {
   if (!isLoggedIn()) {
-    alert('Please login first!');
     window.location.href = 'login.html';
     return;
   }
