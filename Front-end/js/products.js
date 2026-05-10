@@ -129,11 +129,9 @@ const addToCart = async (productId) => {
     return;
   }
 
-  if (isLoggedIn()){
-    const result = await api.addToCart(productId, 1);
-    if (result.message) {
-      // ✅ open panel instead of alert
-    }
+  const result = await api.addToCart(productId, 1);
+  if (result.message) {
+    openCart(); // ✅ open panel instead of alert
   }
 };
 
