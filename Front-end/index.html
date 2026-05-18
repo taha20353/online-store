@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Online Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body>
+
   <!-- CART SIDE PANEL -->
   <div id="cartOverlay" class="cart-overlay" onclick="closeCart()"></div>
   <div id="cartPanel" class="cart-panel">
@@ -16,9 +17,7 @@
       <h3>🛒 Your Cart</h3>
       <button onclick="closeCart()" class="close-btn">✕</button>
     </div>
-    <div id="panelCartItems" class="panel-cart-items">
-      Loading...
-    </div>
+    <div id="panelCartItems" class="panel-cart-items">Loading...</div>
     <div id="panelCartFooter" class="panel-cart-footer"></div>
   </div>
 
@@ -32,62 +31,134 @@
       <a href="login.html" id="loginLink">Login</a>
       <a href="#" id="logoutLink" style="display:none;">Logout</a>
     </div>
-    <!-- Hamburger for mobile -->
     <button class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span>
     </button>
-
-    <!-- Mobile menu -->
-    <div class="mobile-menu" id="mobileMenu">
-      <a href="index.html">Products</a>
-      <a href="cart.html">Cart</a>
-      <a href="orders.html">Orders</a>
-      <a href="login.html" id="mobileLoginLink">Login</a>
-      <a href="#" id="mobileLogoutLink" style="display:none;">Logout</a>
-    </div>
   </nav>
 
-  <!-- MAIN CONTENT -->
-  <div class="container">
-    <h2 class="page-title">All Products</h2>
-    <div class="products-grid" id="productsGrid">
-      <p>Loading products...</p>
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Products</a>
+    <a href="cart.html">Cart</a>
+    <a href="orders.html">Orders</a>
+    <a href="login.html" id="mobileLoginLink">Login</a>
+    <a href="#" id="mobileLogoutLink" style="display:none;">Logout</a>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+
+    <div class="hero-tag">✨ New arrivals every week</div>
+
+    <h1>
+      DISCOVER<br>
+      <span class="gradient-text">AMAZING</span><br>
+      PRODUCTS
+    </h1>
+
+    <p class="hero-sub">
+      Shop the latest products at unbeatable prices. Fast delivery, easy returns, and secure checkout.
+    </p>
+
+    <!-- HERO SEARCH -->
+    <div class="hero-search">
+      <input type="text" id="heroSearch" placeholder="Search for products..." />
+      <button onclick="handleHeroSearch()">Search</button>
+    </div>
+
+    <!-- HERO STATS -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="heroProductCount">...</div>
+        <div class="hero-stat-label">Products</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="heroCategoryCount">...</div>
+        <div class="hero-stat-label">Categories</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">100%</div>
+        <div class="hero-stat-label">Secure</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">24/7</div>
+        <div class="hero-stat-label">Support</div>
+      </div>
     </div>
   </div>
 
-<script src="js/api.js"></script>
-<script src="js/products.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('Token:', localStorage.getItem('token'));
-    console.log('isLoggedIn:', isLoggedIn());
+  <!-- MAIN CONTENT -->
+  <div class="container">
 
-    // Desktop navbar
-    if (isLoggedIn()) {
-      document.getElementById('loginLink').style.display = 'none';
-      document.getElementById('logoutLink').style.display = 'inline';
-    }
+    <!-- FEATURED BANNER -->
+    <div class="featured-banner">
+      <div class="banner-text">
+        <h3>🔥 HOT DEALS THIS WEEK</h3>
+        <p>Limited time offers on our most popular products</p>
+      </div>
+      <button class="banner-badge" onclick="scrollToProducts()">
+        Shop Now →
+      </button>
+    </div>
 
-    // Mobile menu
-    if (isLoggedIn()) {
-      const mobileLogin = document.getElementById('mobileLoginLink');
-      const mobileLogout = document.getElementById('mobileLogoutLink');
-      if (mobileLogin) mobileLogin.style.display = 'none';
-      if (mobileLogout) mobileLogout.style.display = 'block';
-    }
+    <!-- PRODUCTS SECTION -->
+    <div id="productsSection">
+      <div class="products-header">
+        <h2>ALL PRODUCTS</h2>
+        <span class="products-count" id="productsCount"></span>
+      </div>
 
-    // Desktop logout
-    document.getElementById('logoutLink')?.addEventListener('click', () => {
-      removeToken();
-      window.location.href = 'login.html';
-    });
+      <!-- SEARCH + SORT -->
+      <div class="search-bar">
+        <div class="search-input-wrap">
+          <input type="text" id="searchInput" placeholder="Search products..." oninput="filterProducts()" />
+        </div>
+        <select class="sort-select" id="sortSelect" onchange="filterProducts()">
+          <option value="default">Sort: Default</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="name-az">Name: A to Z</option>
+          <option value="name-za">Name: Z to A</option>
+        </select>
+      </div>
 
-    // Mobile logout
-    document.getElementById('mobileLogoutLink')?.addEventListener('click', () => {
-      removeToken();
-      window.location.href = 'login.html';
+      <!-- CATEGORIES -->
+      <div class="categories-bar" id="categoriesBar">
+        <button class="cat-btn active" onclick="filterByCategory('all', this)">All</button>
+      </div>
+
+      <!-- PRODUCTS GRID -->
+      <div class="products-grid" id="productsGrid">
+        <p>Loading products...</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/products.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (isLoggedIn()) {
+        document.getElementById('loginLink').style.display = 'none';
+        document.getElementById('logoutLink').style.display = 'inline';
+        const mobileLogin = document.getElementById('mobileLoginLink');
+        const mobileLogout = document.getElementById('mobileLogoutLink');
+        if (mobileLogin) mobileLogin.style.display = 'none';
+        if (mobileLogout) mobileLogout.style.display = 'block';
+      }
+
+      document.getElementById('logoutLink')?.addEventListener('click', () => {
+        removeToken();
+        window.location.href = 'login.html';
+      });
+
+      document.getElementById('mobileLogoutLink')?.addEventListener('click', () => {
+        removeToken();
+        window.location.href = 'login.html';
+      });
     });
 
     const toggleMenu = () => {
@@ -95,11 +166,22 @@
       document.getElementById('mobileMenu').classList.toggle('open');
     };
 
-    // Make toggleMenu global
-    window.toggleMenu = toggleMenu;
-  });
-</script>
+    const scrollToProducts = () => {
+      document.getElementById('productsSection').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const handleHeroSearch = () => {
+      const query = document.getElementById('heroSearch').value;
+      document.getElementById('searchInput').value = query;
+      scrollToProducts();
+      filterProducts();
+    };
+
+    // Search on Enter key in hero
+    document.getElementById('heroSearch')?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleHeroSearch();
+    });
+  </script>
 
 </body>
-
 </html>

@@ -31,12 +31,14 @@ const authRoutes = require('./routes/auth');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/orders');
 const adminRoutes = require('./routes/admin');
+const reviewRoutes = require('./routes/reviews');
 
 app.use('/products', productRoutes);
 app.use('/auth', authRoutes);
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
 app.use('/admin', adminRoutes);
+app.use('/products/:id/reviews', reviewRoutes);
 
 const verifyToken = require('./middleware/auth');
 app.get('/protected', verifyToken, (req, res) => {

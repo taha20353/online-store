@@ -218,6 +218,29 @@ const api = {
       headers: authHeaders()
     });
     return res.json();
-  }
+  },
+
+  // ─── REVIEWS ────────────────────────────────────────
+getReviews: async (productId) => {
+  const res = await fetch(`${API_URL}/products/${productId}/reviews`);
+  return res.json();
+},
+
+addReview: async (productId, rating, comment) => {
+  const res = await fetch(`${API_URL}/products/${productId}/reviews`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ rating, comment })
+  });
+  return res.json();
+},
+
+deleteReview: async (productId, reviewId) => {
+  const res = await fetch(`${API_URL}/products/${productId}/reviews/${reviewId}`, {
+    method: 'DELETE',
+    headers: authHeaders()
+  });
+  return res.json();
+}
 
 };
