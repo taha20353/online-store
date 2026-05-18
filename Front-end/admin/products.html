@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin - Products</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/admin.css" />
 </head>
-
 <body>
 
-  <!-- ADMIN NAVBAR -->
+  <!-- NAVBAR -->
   <nav>
     <a href="index.html" class="logo">⚙️ Admin Panel</a>
     <div class="nav-links">
@@ -21,44 +21,61 @@
       <a href="../index.html">← Store</a>
       <a href="#" id="logoutLink">Logout</a>
     </div>
-
-    <!-- Hamburger for mobile -->
     <button class="hamburger" id="hamburger" onclick="toggleMenu()">
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span>
     </button>
-
-    <!-- Mobile menu -->
-    <div class="mobile-menu" id="mobileMenu">
-      <a href="index.html">Dashboard</a>
-      <a href="products.html">Products</a>
-      <a href="orders.html">Orders</a>
-      <a href="../index.html">← Store</a>
-      <a href="#" id="mobileLogoutLink">Logout</a>
-    </div>
   </nav>
 
-  <div class="container">
-    <h2 class="page-title">🛍️ Manage Products</h2>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Dashboard</a>
+    <a href="products.html">Products</a>
+    <a href="orders.html">Orders</a>
+    <a href="../index.html">← Store</a>
+    <a href="#" id="mobileLogoutLink">Logout</a>
+  </div>
 
-    <!-- ADD PRODUCT FORM -->
-    <div class="admin-form">
-      <h3 id="formTitle">➕ Add New Product</h3>
+  <!-- MAIN -->
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:16px;">
+      <h2 class="page-title" style="margin-bottom:0;">🛍️ Products</h2>
+      <button class="btn btn-primary" style="width:auto; padding:12px 24px;" onclick="openAddModal()">
+        ➕ Add Product
+      </button>
+    </div>
+
+    <!-- SEARCH -->
+    <div style="margin-bottom:20px;">
+      <input type="text" id="productSearch" placeholder="🔍 Search products..."
+        oninput="searchProducts()"
+        style="width:100%; padding:12px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; color:var(--text-primary); font-family:'DM Sans',sans-serif; font-size:14px; outline:none;" />
+    </div>
+
+    <!-- PRODUCTS TABLE -->
+    <div id="productsTable">Loading...</div>
+  </div>
+
+  <!-- ADD/EDIT MODAL -->
+  <div id="modalOverlay" class="cart-overlay" onclick="closeModal()"></div>
+  <div id="productModal" class="product-modal">
+    <div class="product-modal-header">
+      <h3 id="modalTitle">➕ Add New Product</h3>
+      <button onclick="closeModal()" class="close-btn">✕</button>
+    </div>
+    <div class="product-modal-body">
+
       <input type="hidden" id="editProductId" />
-      <div class="form-row">
+
+      <div class="modal-grid">
         <div class="form-group">
-          <label>Product Name</label>
+          <label>Product Name *</label>
           <input type="text" id="productName" placeholder="Enter product name" />
         </div>
         <div class="form-group">
-          <label>Category</label>
+          <label>Category *</label>
           <select id="productCategory"></select>
         </div>
-      </div>
-      <div class="form-row">
         <div class="form-group">
-          <label>Price</label>
+          <label>Price *</label>
           <input type="number" id="productPrice" placeholder="0.00" step="0.01" />
         </div>
         <div class="form-group">
@@ -66,30 +83,42 @@
           <input type="number" id="productStock" placeholder="0" />
         </div>
       </div>
+
       <div class="form-group">
         <label>Description</label>
         <textarea id="productDescription" placeholder="Enter product description"></textarea>
       </div>
-      <!-- updated uploud Images -->
+
+      <!-- IMAGES SECTION -->
       <div class="form-group">
         <label>Product Images</label>
-        <input type="file" id="productImages" multiple accept="image/*" />
-        <small style="color:#888;">Select up to 5 images</small>
+        <div class="image-upload-area" onclick="document.getElementById('productImages').click()">
+          <div class="upload-icon">📸</div>
+          <p>Click to upload images</p>
+          <small>JPG, PNG, WEBP — Max 5 images</small>
+          <input type="file" id="productImages" multiple accept="image/*" style="display:none;" />
+        </div>
+        <div id="imagePreview" class="image-preview-grid"></div>
       </div>
-      <div id="imagePreview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;"></div>
-      <div id="existingImages" style="margin-top:10px;"></div>
-      <button class="btn btn-primary" style="width:auto;" onclick="saveProduct()">
-        💾 Save Product
-      </button>
-      <button class="btn btn-danger" style="width:auto; display:none;" id="cancelEdit" onclick="cancelEdit()">
-        Cancel
-      </button>
-    </div>
-    <div id="productMessage"></div>
-  </div>
 
-  <!-- PRODUCTS TABLE -->
-  <div id="productsTable">Loading...</div>
+      <!-- EXISTING IMAGES -->
+      <div id="existingImagesSection" style="display:none;">
+        <label class="form-label-existing">Existing Images</label>
+        <div id="existingImages" class="image-preview-grid"></div>
+      </div>
+
+      <div id="productMessage"></div>
+
+      <div style="display:flex; gap:12px; margin-top:24px;">
+        <button class="btn btn-primary" onclick="saveProduct()">
+          💾 Save Product
+        </button>
+        <button class="btn btn-danger" onclick="closeModal()" style="width:auto; padding:11px 24px;">
+          Cancel
+        </button>
+      </div>
+
+    </div>
   </div>
 
   <script src="../js/api.js"></script>
@@ -97,9 +126,15 @@
   <script>
     if (!isLoggedIn()) window.location.href = '../login.html';
 
-    document.getElementById('logoutLink').addEventListener('click', () => {
-      removeToken();
-      window.location.href = '../login.html';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('logoutLink')?.addEventListener('click', () => {
+        removeToken();
+        window.location.href = '../login.html';
+      });
+      document.getElementById('mobileLogoutLink')?.addEventListener('click', () => {
+        removeToken();
+        window.location.href = '../login.html';
+      });
     });
 
     const toggleMenu = () => {
@@ -109,5 +144,4 @@
   </script>
 
 </body>
-
 </html>

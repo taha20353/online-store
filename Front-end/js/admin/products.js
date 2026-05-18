@@ -1,12 +1,14 @@
+let allProducts = [];
 let editingId = null;
 
+// ─── MESSAGES ────────────────────────────────────────
 const showMessage = (text, type) => {
   document.getElementById('productMessage').innerHTML =
     `<div class="message ${type}" style="margin-top:15px;">${text}</div>`;
   setTimeout(() => document.getElementById('productMessage').innerHTML = '', 3000);
 };
 
-// Load categories into dropdown
+// ─── LOAD CATEGORIES ─────────────────────────────────
 const loadCategories = async () => {
   const categories = await api.adminGetCategories();
   const select = document.getElementById('productCategory');
@@ -15,9 +17,13 @@ const loadCategories = async () => {
   ).join('');
 };
 
-// Load products table
+// ─── LOAD PRODUCTS ───────────────────────────────────
 const loadProducts = async () => {
-  const products = await api.adminGetProducts();
+  allProducts = await api.adminGetProducts();
+  renderProducts(allProducts);
+};
+
+const renderProducts = (products) => {
   const container = document.getElementById('productsTable');
 
   if (!products.length) {
@@ -27,41 +33,157 @@ const loadProducts = async () => {
 
   container.innerHTML = `
     <div class="admin-table-wrapper">
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Category</th>
-          <th>Price</th>
-          <th>Stock</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${products.map(p => `
+      <table class="admin-table">
+        <thead>
           <tr>
-            <td>#${p.id}</td>
-            <td>${p.name}</td>
-            <td>${p.category}</td>
-            <td>$${p.price}</td>
-            <td>${p.stock}</td>
-            <td style="display:flex; gap:8px;">
-              <button class="admin-btn admin-btn-edit" onclick="editProduct(${p.id})">
-                ✏️ Edit
-              </button>
-              <button class="admin-btn admin-btn-delete" onclick="deleteProduct(${p.id})">
-                🗑 Delete
-              </button>
-            </td>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
           </tr>
-        `).join('')}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          ${products.map(p => `
+            <tr>
+              <td>
+                ${p.image_url
+                  ? `<img src="${p.image_url}" style="width:48px; height:48px; object-fit:cover; border-radius:8px; border:1px solid var(--border);" />`
+                  : `<div style="width:48px; height:48px; background:var(--bg-hover); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px;">📦</div>`
+                }
+              </td>
+              <td style="font-weight:600;">${p.name}</td>
+              <td>${p.category}</td>
+              <td style="font-family:'DM Mono',monospace; color:var(--accent);">$${p.price}</td>
+              <td>
+                <span style="color:${p.stock > 0 ? 'var(--success)' : 'var(--danger)'}; font-family:'DM Mono',monospace;">
+                  ${p.stock}
+                </span>
+              </td>
+              <td>
+                <div style="display:flex; gap:8px;">
+                  <button class="admin-btn admin-btn-edit" onclick="editProduct(${p.id})">
+                    ✏️ Edit
+                  </button>
+                  <button class="admin-btn admin-btn-delete" onclick="deleteProduct(${p.id})">
+                    🗑 Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
     </div>
   `;
 };
 
+// ─── SEARCH ──────────────────────────────────────────
+const searchProducts = () => {
+  const query = document.getElementById('productSearch').value.toLowerCase();
+  const filtered = allProducts.filter(p =>
+    p.name.toLowerCase().includes(query) ||
+    p.category.toLowerCase().includes(query)
+  );
+  renderProducts(filtered);
+};
+
+// ─── OPEN ADD MODAL ───────────────────────────────────
+const openAddModal = () => {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = '➕ Add New Product';
+  document.getElementById('productName').value = '';
+  document.getElementById('productDescription').value = '';
+  document.getElementById('productPrice').value = '';
+  document.getElementById('productStock').value = '';
+  document.getElementById('productImages').value = '';
+  document.getElementById('imagePreview').innerHTML = '';
+  document.getElementById('existingImagesSection').style.display = 'none';
+  document.getElementById('existingImages').innerHTML = '';
+  document.getElementById('productMessage').innerHTML = '';
+  openModal();
+};
+
+// ─── EDIT PRODUCT ─────────────────────────────────────
+const editProduct = async (id) => {
+  editingId = id;
+  const product = allProducts.find(p => p.id === id);
+  if (!product) return;
+
+  document.getElementById('modalTitle').textContent = '✏️ Edit Product';
+  document.getElementById('productName').value = product.name;
+  document.getElementById('productDescription').value = product.description || '';
+  document.getElementById('productPrice').value = product.price;
+  document.getElementById('productStock').value = product.stock;
+  document.getElementById('productCategory').value = product.category_id;
+  document.getElementById('productImages').value = '';
+  document.getElementById('imagePreview').innerHTML = '';
+  document.getElementById('productMessage').innerHTML = '';
+
+  openModal();
+
+  // Load existing images
+  await loadExistingImages(id);
+};
+
+// ─── LOAD EXISTING IMAGES ─────────────────────────────
+const loadExistingImages = async (productId) => {
+  const images = await api.adminGetProductImages(productId);
+  const section = document.getElementById('existingImagesSection');
+  const container = document.getElementById('existingImages');
+
+  if (!images.length) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+
+  container.innerHTML = images.map(img => `
+    <div class="existing-image-item" id="existing-${img.id}">
+      <img src="${img.image_url}" />
+      ${img.is_primary ? '<div class="primary-badge">Primary</div>' : ''}
+      <button class="image-delete-btn" onclick="deleteExistingImage(${img.id})">✕</button>
+    </div>
+  `).join('');
+};
+
+// ─── DELETE EXISTING IMAGE ────────────────────────────
+const deleteExistingImage = async (imageId) => {
+  if (!confirm('Delete this image?')) return;
+  const result = await api.adminDeleteImage(imageId);
+  if (result.message.includes('✅')) {
+    document.getElementById(`existing-${imageId}`)?.remove();
+    // Hide section if no images left
+    const remaining = document.querySelectorAll('.existing-image-item');
+    if (!remaining.length) {
+      document.getElementById('existingImagesSection').style.display = 'none';
+    }
+  }
+};
+
+// ─── IMAGE PREVIEW ────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('productImages')?.addEventListener('change', (e) => {
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = '';
+    Array.from(e.target.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        preview.innerHTML += `
+          <div class="preview-image-item">
+            <img src="${e.target.result}" />
+            <div class="preview-badge">New</div>
+          </div>
+        `;
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+});
+
+// ─── SAVE PRODUCT ─────────────────────────────────────
 const saveProduct = async () => {
   const name = document.getElementById('productName').value;
   const description = document.getElementById('productDescription').value;
@@ -74,7 +196,6 @@ const saveProduct = async () => {
     return;
   }
 
-  // Save product first
   let result;
   if (editingId) {
     result = await api.adminUpdateProduct(editingId, {
@@ -86,12 +207,12 @@ const saveProduct = async () => {
     });
   }
 
-  if (!result.message.includes('✅')) {
-    showMessage(result.message, 'error');
+  if (!result.message?.includes('✅')) {
+    showMessage(result.message || '❌ Something went wrong', 'error');
     return;
   }
 
-  // Upload images if any selected
+  // Upload images if selected
   const imageFiles = document.getElementById('productImages').files;
   if (imageFiles.length > 0) {
     const productId = editingId || result.id;
@@ -101,102 +222,32 @@ const saveProduct = async () => {
     await api.adminUploadImages(productId, formData);
   }
 
-  showMessage('✅ Product saved successfully!', 'success');
-  cancelEdit();
-  loadProducts();
+  showMessage('✅ Product saved!', 'success');
+  setTimeout(() => {
+    closeModal();
+    loadProducts();
+  }, 1000);
 };
 
-// Fill form with product data for editing
-const editProduct = async (id) => {
-  const products = await api.adminGetProducts();
-  const product = products.find(p => p.id === id);
-  if (!product) return;
-
-  editingId = id;
-  document.getElementById('editProductId').value = id;
-  document.getElementById('productName').value = product.name;
-  document.getElementById('productDescription').value = product.description || '';
-  document.getElementById('productPrice').value = product.price;
-  document.getElementById('productStock').value = product.stock;
-  document.getElementById('productImage').value = product.image_url || '';
-  document.getElementById('productCategory').value = product.category_id;
-  document.getElementById('formTitle').textContent = '✏️ Edit Product';
-  document.getElementById('cancelEdit').style.display = 'inline-block';
-
-  loadExistingImages(id);
-
-  // Scroll to form
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-// Cancel edit mode
-const cancelEdit = () => {
-  editingId = null;
-  document.getElementById('productName').value = '';
-  document.getElementById('productDescription').value = '';
-  document.getElementById('productPrice').value = '';
-  document.getElementById('productStock').value = '';
-  document.getElementById('productImages').value = '';
-  document.getElementById('imagePreview').innerHTML = '';
-  document.getElementById('existingImages').innerHTML = '';
-  document.getElementById('formTitle').textContent = '➕ Add New Product';
-  document.getElementById('cancelEdit').style.display = 'none';
-};
-// Delete product
+// ─── DELETE PRODUCT ───────────────────────────────────
 const deleteProduct = async (id) => {
   if (!confirm('Are you sure you want to delete this product?')) return;
   const result = await api.adminDeleteProduct(id);
-  showMessage(result.message, 'success');
-  loadProducts();
+  if (result.message?.includes('✅')) loadProducts();
+  else alert(result.message);
 };
 
-// Preview images before upload
-document.getElementById('productImages')?.addEventListener('change', (e) => {
-  const preview = document.getElementById('imagePreview');
-  preview.innerHTML = '';
-  Array.from(e.target.files).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      preview.innerHTML += `
-        <img src="${e.target.result}" 
-             style="width:80px; height:80px; object-fit:cover; border-radius:6px;" />
-      `;
-    };
-    reader.readAsDataURL(file);
-  });
-});
-
-// Load existing images when editing
-const loadExistingImages = async (productId) => {
-  const images = await api.adminGetProductImages(productId);
-  const container = document.getElementById('existingImages');
-
-  if (!images.length) {
-    container.innerHTML = '';
-    return;
-  }
-
-  container.innerHTML = `
-    <p style="font-size:13px; color:#888; margin-bottom:8px;">Existing images:</p>
-    <div style="display:flex; gap:10px; flex-wrap:wrap;">
-      ${images.map(img => `
-        <div style="position:relative;">
-          <img src="${img.image_url}" 
-               style="width:80px; height:80px; object-fit:cover; border-radius:6px;" />
-          <button onclick="deleteImage(${img.id})"
-            style="position:absolute; top:-8px; right:-8px; background:#e74c3c; 
-                   color:white; border:none; border-radius:50%; width:20px; 
-                   height:20px; cursor:pointer; font-size:12px;">✕</button>
-        </div>
-      `).join('')}
-    </div>
-  `;
+// ─── MODAL CONTROLS ───────────────────────────────────
+const openModal = () => {
+  document.getElementById('productModal').classList.add('open');
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 };
 
-const deleteImage = async (imageId) => {
-  if (!confirm('Delete this image?')) return;
-  await api.adminDeleteImage(imageId);
-  loadExistingImages(editingId);
+const closeModal = () => {
+  document.getElementById('productModal').classList.remove('open');
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
 };
 
 loadCategories();
