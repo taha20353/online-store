@@ -933,6 +933,7 @@ input[type="file"]:hover {
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 28px;
+  margin: 20px;
 }
 
 .categories-list {
