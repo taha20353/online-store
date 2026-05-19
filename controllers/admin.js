@@ -335,9 +335,56 @@ const getProductImages = (req, res) => {
   });
 };
 
+// ─── NEW: add category ───
+const addCategory = (req, res) => {
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ message: '❌ Category name is required' });
+  }
+
+  // ─── NEW: check if category already exists ───
+  db.query('SELECT * FROM categories WHERE name = ?', [name], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (results.length > 0) {
+      return res.status(400).json({ message: '❌ Category already exists' });
+    }
+
+    db.query('INSERT INTO categories (name) VALUES (?)', [name], (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.status(201).json({ message: '✅ Category added!', id: result.insertId });
+    });
+  });
+};
+
+// ─── NEW: delete category ───
+const deleteCategory = (req, res) => {
+  const { id } = req.params;
+
+  // ─── NEW: check if category has products ───
+  db.query('SELECT COUNT(*) AS total FROM products WHERE category_id = ?', [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    if (results[0].total > 0) {
+      return res.status(400).json({
+        message: `❌ Cannot delete — ${results[0].total} products use this category`
+      });
+    }
+
+    db.query('DELETE FROM categories WHERE id = ?', [id], (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (results.affectedRows === 0) {
+        return res.status(404).json({ message: 'Category not found' });
+      }
+      res.status(200).json({ message: '✅ Category deleted!' });
+    });
+  });
+};
+
 module.exports = {
   getAllOrders, getOrderDetails, updateOrderStatus,
   getAllProducts, addProduct, updateProduct, deleteProduct,
   getCategories, getStats,
-  uploadImages, deleteImage, getProductImages
+  uploadImages, deleteImage, getProductImages,
+  addCategory, deleteCategory
 };

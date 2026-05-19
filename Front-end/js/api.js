@@ -241,6 +241,24 @@ deleteReview: async (productId, reviewId) => {
     headers: authHeaders()
   });
   return res.json();
+},
+
+// ─── NEW: category management ───
+adminAddCategory: async (name) => {
+  const res = await fetch(`${API_URL}/admin/categories`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ name })
+  });
+  return res.json();
+},
+
+adminDeleteCategory: async (id) => {
+  const res = await fetch(`${API_URL}/admin/categories/${id}`, {
+    method: 'DELETE',
+    headers: authHeaders()
+  });
+  return res.json();
 }
 
 };

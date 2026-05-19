@@ -7,7 +7,8 @@ const {
   getAllOrders, getOrderDetails, updateOrderStatus,
   getAllProducts, addProduct, updateProduct, deleteProduct,
   getCategories, getStats,
-  uploadImages, deleteImage, getProductImages
+  uploadImages, deleteImage, getProductImages,
+  addCategory, deleteCategory
 } = require('../controllers/admin');
 
 // All admin routes require token + admin role
@@ -29,6 +30,8 @@ router.delete('/products/:id', deleteProduct);
 
 // Categories
 router.get('/categories', getCategories);
+router.post('/categories', addCategory);
+router.delete('/categories/:id', deleteCategory);
 
 // Product images
 router.post('/products/:id/images', upload.array('images', 5), uploadImages);

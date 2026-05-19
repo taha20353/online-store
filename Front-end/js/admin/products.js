@@ -250,5 +250,58 @@ const closeModal = () => {
   document.body.style.overflow = '';
 };
 
+// ─── NEW: load and render categories ───
+const loadCategoriesSection = async () => {
+  const categories = await api.adminGetCategories();
+  const container = document.getElementById('categoriesList');
+
+  if (!categories.length) {
+    container.innerHTML = '<p style="color:var(--text-secondary); font-size:13px;">No categories yet.</p>';
+    return;
+  }
+
+  container.innerHTML = categories.map(c => `
+    <div class="category-tag">
+      <span>${c.name}</span>
+      <button onclick="deleteCategory(${c.id}, '${c.name}')" class="cat-delete-btn">✕</button>
+    </div>
+  `).join('');
+};
+
+// ─── NEW: add category ───
+const addCategory = async () => {
+  const name = document.getElementById('newCategoryName').value.trim();
+  if (!name) return;
+
+  const result = await api.adminAddCategory(name);
+  const msg = document.getElementById('categoryMessage');
+  msg.innerHTML = `<div class="message ${result.message.includes('✅') ? 'success' : 'error'}" 
+                       style="margin-top:10px;">${result.message}</div>`;
+
+  if (result.message.includes('✅')) {
+    document.getElementById('newCategoryName').value = '';
+    loadCategoriesSection();
+    loadCategories(); // ─── NEW: refresh dropdown in product form ───
+    setTimeout(() => msg.innerHTML = '', 3000);
+  }
+};
+
+// ─── NEW: delete category ───
+const deleteCategory = async (id, name) => {
+  if (!confirm(`Delete category "${name}"?`)) return;
+
+  const result = await api.adminDeleteCategory(id);
+  const msg = document.getElementById('categoryMessage');
+  msg.innerHTML = `<div class="message ${result.message.includes('✅') ? 'success' : 'error'}"
+                       style="margin-top:10px;">${result.message}</div>`;
+
+  if (result.message.includes('✅')) {
+    loadCategoriesSection();
+    loadCategories(); // ─── NEW: refresh dropdown ───
+    setTimeout(() => msg.innerHTML = '', 3000);
+  }
+};
+
 loadCategories();
 loadProducts();
+loadCategoriesSection();

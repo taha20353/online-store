@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin - Products</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/admin.css" />
 </head>
+
 <body>
 
   <!-- NAVBAR -->
@@ -36,7 +40,8 @@
 
   <!-- MAIN -->
   <div class="container">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:16px;">
+    <div
+      style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:16px;">
       <h2 class="page-title" style="margin-bottom:0;">🛍️ Products</h2>
       <button class="btn btn-primary" style="width:auto; padding:12px 24px;" onclick="openAddModal()">
         ➕ Add Product
@@ -45,13 +50,31 @@
 
     <!-- SEARCH -->
     <div style="margin-bottom:20px;">
-      <input type="text" id="productSearch" placeholder="🔍 Search products..."
-        oninput="searchProducts()"
+      <input type="text" id="productSearch" placeholder="🔍 Search products..." oninput="searchProducts()"
         style="width:100%; padding:12px 16px; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; color:var(--text-primary); font-family:'DM Sans',sans-serif; font-size:14px; outline:none;" />
     </div>
 
     <!-- PRODUCTS TABLE -->
     <div id="productsTable">Loading...</div>
+  </div>
+
+  <!-- ─── NEW: CATEGORIES SECTION ─── -->
+  <div class="categories-section">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h3 style="font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
+        📁 Categories
+      </h3>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <input type="text" id="newCategoryName" placeholder="New category name..." style="padding:9px 14px; background:var(--bg-secondary); border:1px solid var(--border);
+               border-radius:8px; color:var(--text-primary); font-family:'DM Sans',sans-serif;
+               font-size:13px; outline:none; width:200px;" />
+        <button class="admin-btn admin-btn-edit" onclick="addCategory()" style="white-space:nowrap; padding:9px 16px;">
+          ➕ Add
+        </button>
+      </div>
+    </div>
+    <div id="categoriesList" class="categories-list">Loading...</div>
+    <div id="categoryMessage"></div>
   </div>
 
   <!-- ADD/EDIT MODAL -->
@@ -144,4 +167,5 @@
   </script>
 
 </body>
+
 </html>

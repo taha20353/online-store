@@ -925,3 +925,50 @@ input[type="file"]:hover {
   .modal-grid { grid-template-columns: 1fr; }
   .product-modal { max-height: 95vh; }
 }
+
+/* ─── NEW: categories section ─── */
+.categories-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+.categories-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.category-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.category-tag:hover {
+  border-color: var(--border-accent);
+}
+
+.cat-delete-btn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.cat-delete-btn:hover { transform: scale(1.2); }
