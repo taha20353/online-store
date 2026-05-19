@@ -39,7 +39,6 @@ const getOrderDetails = (req, res) => {
   });
 };
 
-// UPDATE order status
 const updateOrderStatus = (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
@@ -49,12 +48,101 @@ const updateOrderStatus = (req, res) => {
     return res.status(400).json({ message: '❌ Invalid status' });
   }
 
-  const sql = 'UPDATE orders SET status = ? WHERE id = ?';
-  db.query(sql, [status, id], (err, results) => {
+  // Get current order status first
+  const getCurrentSql = 'SELECT status FROM orders WHERE id = ?';
+  db.query(getCurrentSql, [id], (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
-    if (results.affectedRows === 0) {
+    if (results.length === 0) {
       return res.status(404).json({ message: 'Order not found' });
     }
+
+    const currentStatus = results[0].status;
+
+    // If changing TO cancelled — restore stock
+    if (status === 'cancelled' && currentStatus !== 'cancelled') {
+      const getItemsSql = `
+        SELECT product_id, quantity 
+        FROM order_items 
+        WHERE order_id = ?
+      `;
+      db.query(getItemsSql, [id], (err, items) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        // Restore stock for each item
+        const restorePromises = items.map(item => {
+          return new Promise((resolve, reject) => {
+            const restoreSql = 'UPDATE products SET stock = stock + ? WHERE id = ?';
+            db.query(restoreSql, [item.quantity, item.product_id], (err) => {
+              if (err) reject(err);
+              else resolve();
+            });
+          });
+        });
+
+        Promise.all(restorePromises).then(() => {
+          // Now update order status
+          updateStatus(id, status, res);
+        }).catch(err => {
+          res.status(500).json({ error: err.message });
+        });
+      });
+    }
+
+    // If changing FROM cancelled to something else — deduct stock again
+    else if (currentStatus === 'cancelled' && status !== 'cancelled') {
+      const getItemsSql = `
+        SELECT product_id, quantity 
+        FROM order_items 
+        WHERE order_id = ?
+      `;
+      db.query(getItemsSql, [id], (err, items) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        // Check stock availability first
+        const checkPromises = items.map(item => {
+          return new Promise((resolve, reject) => {
+            db.query('SELECT stock FROM products WHERE id = ?', [item.product_id], (err, results) => {
+              if (err) reject(err);
+              else if (results[0].stock < item.quantity) {
+                reject(new Error(`Not enough stock for product ID ${item.product_id}`));
+              }
+              else resolve();
+            });
+          });
+        });
+
+        Promise.all(checkPromises).then(() => {
+          // Deduct stock
+          const deductPromises = items.map(item => {
+            return new Promise((resolve, reject) => {
+              const deductSql = 'UPDATE products SET stock = stock - ? WHERE id = ?';
+              db.query(deductSql, [item.quantity, item.product_id], (err) => {
+                if (err) reject(err);
+                else resolve();
+              });
+            });
+          });
+
+          return Promise.all(deductPromises);
+        }).then(() => {
+          updateStatus(id, status, res);
+        }).catch(err => {
+          res.status(400).json({ message: err.message });
+        });
+      });
+    }
+
+    // No stock change needed
+    else {
+      updateStatus(id, status, res);
+    }
+  });
+};
+
+// Helper to update order status
+const updateStatus = (id, status, res) => {
+  db.query('UPDATE orders SET status = ? WHERE id = ?', [status, id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
     res.status(200).json({ message: '✅ Order status updated!' });
   });
 };
