@@ -259,6 +259,23 @@ adminDeleteCategory: async (id) => {
     headers: authHeaders()
   });
   return res.json();
-}
+},
+
+getProfile: async () => {
+    const res = await fetch(`${API_URL}/profile`, {
+      headers: authHeaders()
+    });
+    return res.json();
+  },
+
+  // ... rest of profile methods
+
+  setDefaultAddress: async (id) => {
+    const res = await fetch(`${API_URL}/profile/addresses/${id}/default`, {
+      method: 'PUT',
+      headers: authHeaders()
+    });
+    return res.json();
+  }
 
 };
