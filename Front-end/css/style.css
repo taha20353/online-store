@@ -1787,3 +1787,314 @@ h2.page-title {
 
   .review-comment { padding-left: 0; margin-top: 8px; }
 }
+
+/* ═══════════════════════════════════
+   PROFILE PAGE
+═══════════════════════════════════ */
+
+/* ─── PROFILE HEADER ─── */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-3));
+}
+
+.profile-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 800;
+  border: 3px solid var(--border-accent);
+  overflow: hidden;
+}
+
+.avatar-edit-btn {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 28px; height: 28px;
+  background: var(--accent);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.avatar-edit-btn:hover { transform: scale(1.1); }
+
+.profile-header-info h1 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+.profile-role-badge {
+  display: inline-block;
+  background: rgba(255,60,172,0.1);
+  color: var(--accent);
+  border: 1px solid var(--border-accent);
+  padding: 3px 12px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+}
+
+/* ─── PROFILE TABS ─── */
+.profile-tabs {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.profile-tabs-header {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+  overflow-x: auto;
+}
+
+.profile-tab-btn {
+  padding: 16px 24px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  white-space: nowrap;
+}
+
+.profile-tab-btn:hover { color: var(--text-primary); }
+
+.profile-tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.profile-tab-content {
+  display: none;
+  padding: 32px;
+}
+
+.profile-tab-content.active { display: block; }
+
+/* ─── PROFILE CARD ─── */
+.profile-card { max-width: 700px; }
+
+.profile-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+/* ─── PROFILE FORM ─── */
+.profile-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  padding: 12px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.form-group input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255,60,172,0.1);
+}
+
+/* ─── ADDRESS CARDS ─── */
+.address-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+
+.address-card.default {
+  border-color: rgba(255,60,172,0.3);
+  background: rgba(255,60,172,0.03);
+}
+
+.address-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.address-name {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.default-badge {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 700;
+  margin-left: 8px;
+}
+
+.address-details p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  font-weight: 300;
+}
+
+.addr-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
+  transition: all 0.2s;
+}
+
+.addr-btn-default {
+  background: rgba(43,134,197,0.15);
+  color: var(--accent-3);
+  border: 1px solid rgba(43,134,197,0.3);
+}
+
+.addr-btn-default:hover { background: rgba(43,134,197,0.25); }
+
+.addr-btn-delete {
+  background: rgba(255,68,85,0.15);
+  color: var(--danger);
+  border: 1px solid rgba(255,68,85,0.3);
+}
+
+.addr-btn-delete:hover { background: rgba(255,68,85,0.25); }
+
+/* ─── PROFILE ORDERS ─── */
+.profile-order-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.profile-order-card:last-child { border-bottom: none; }
+
+.profile-order-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-order-id {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.profile-order-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.profile-order-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-order-total {
+  font-family: 'DM Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px 20px;
+  }
+
+  .profile-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-tab-content { padding: 20px 16px; }
+
+  .address-card-header { flex-direction: column; align-items: flex-start; }
+}

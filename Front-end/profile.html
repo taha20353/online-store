@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="index.html" class="logo">🛒 Online Store</a>
+    <div class="nav-links">
+      <a href="index.html">Products</a>
+      <a href="cart.html">Cart</a>
+      <a href="orders.html">Orders</a>
+      <a href="profile.html">Profile</a>
+      <a href="#" id="logoutLink">Logout</a>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Products</a>
+    <a href="cart.html">Cart</a>
+    <a href="orders.html">Orders</a>
+    <a href="profile.html">Profile</a>
+    <a href="#" id="mobileLogoutLink">Logout</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="container">
+
+    <!-- PROFILE HEADER -->
+    <div class="profile-header">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar" id="profileAvatar">?</div>
+        <button class="avatar-edit-btn" onclick="document.getElementById('avatarInput').click()">
+          📷
+        </button>
+        <input type="file" id="avatarInput" accept="image/*" style="display:none;" />
+      </div>
+      <div class="profile-header-info">
+        <h1 id="profileName">Loading...</h1>
+        <p id="profileEmail" style="color:var(--text-secondary); font-size:14px;"></p>
+        <span id="profileRole" class="profile-role-badge"></span>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="profile-tabs">
+      <div class="profile-tabs-header">
+        <button class="profile-tab-btn active" onclick="switchTab('info', this)">👤 Profile</button>
+        <button class="profile-tab-btn" onclick="switchTab('addresses', this)">📍 Addresses</button>
+        <button class="profile-tab-btn" onclick="switchTab('orders', this)">📦 Orders</button>
+        <button class="profile-tab-btn" onclick="switchTab('security', this)">🔒 Security</button>
+      </div>
+
+      <!-- ── PROFILE TAB ── -->
+      <div class="profile-tab-content active" id="tab-info">
+        <div class="profile-card">
+          <h3 class="profile-card-title">Personal Information</h3>
+          <div id="infoMessage"></div>
+          <div class="profile-form-grid">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="editName" placeholder="Your full name" />
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="text" id="editPhone" placeholder="+20 xxx xxx xxxx" />
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="editEmail" disabled
+                style="opacity:0.5; cursor:not-allowed;" />
+              <small style="color:var(--text-secondary); font-size:11px; margin-top:4px; display:block;">
+                Email cannot be changed
+              </small>
+            </div>
+            <div class="form-group">
+              <label>Member Since</label>
+              <input type="text" id="editJoined" disabled
+                style="opacity:0.5; cursor:not-allowed;" />
+            </div>
+          </div>
+          <button class="btn btn-primary" style="width:auto; padding:12px 28px;" onclick="saveProfile()">
+            💾 Save Changes
+          </button>
+        </div>
+      </div>
+
+      <!-- ── ADDRESSES TAB ── -->
+      <div class="profile-tab-content" id="tab-addresses">
+        <div class="profile-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+            <h3 class="profile-card-title" style="margin-bottom:0;">My Addresses</h3>
+            <button class="btn btn-primary" style="width:auto; padding:10px 20px;"
+              onclick="toggleAddressForm()">
+              ➕ Add Address
+            </button>
+          </div>
+
+          <!-- ADD ADDRESS FORM -->
+          <div id="addressForm" style="display:none;">
+            <div id="addressMessage"></div>
+            <div class="profile-form-grid">
+              <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="addrName" placeholder="Full name" />
+              </div>
+              <div class="form-group">
+                <label>Phone *</label>
+                <input type="text" id="addrPhone" placeholder="+20 xxx xxx xxxx" />
+              </div>
+              <div class="form-group">
+                <label>Street *</label>
+                <input type="text" id="addrStreet" placeholder="Street address" />
+              </div>
+              <div class="form-group">
+                <label>City *</label>
+                <input type="text" id="addrCity" placeholder="City" />
+              </div>
+              <div class="form-group">
+                <label>Country *</label>
+                <input type="text" id="addrCountry" placeholder="Country" />
+              </div>
+              <div class="form-group" style="display:flex; align-items:center; gap:10px; padding-top:28px;">
+                <input type="checkbox" id="addrDefault" style="width:16px; height:16px; cursor:pointer;" />
+                <label for="addrDefault" style="text-transform:none; letter-spacing:0; font-size:14px; cursor:pointer;">
+                  Set as default address
+                </label>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px;">
+              <button class="btn btn-primary" style="width:auto; padding:11px 24px;" onclick="saveAddress()">
+                💾 Save Address
+              </button>
+              <button class="btn btn-danger" style="width:auto; padding:11px 24px;" onclick="toggleAddressForm()">
+                Cancel
+              </button>
+            </div>
+            <div style="margin-top:16px; height:1px; background:var(--border);"></div>
+          </div>
+
+          <!-- ADDRESSES LIST -->
+          <div id="addressesList">Loading...</div>
+        </div>
+      </div>
+
+      <!-- ── ORDERS TAB ── -->
+      <div class="profile-tab-content" id="tab-orders">
+        <div class="profile-card">
+          <h3 class="profile-card-title">Order History</h3>
+          <div id="profileOrdersList">Loading...</div>
+        </div>
+      </div>
+
+      <!-- ── SECURITY TAB ── -->
+      <div class="profile-tab-content" id="tab-security">
+        <div class="profile-card">
+          <h3 class="profile-card-title">Change Password</h3>
+          <div id="securityMessage"></div>
+          <div style="max-width:400px;">
+            <div class="form-group">
+              <label>Current Password</label>
+              <input type="password" id="currentPassword" placeholder="Enter current password" />
+            </div>
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" id="newPassword" placeholder="Enter new password" />
+            </div>
+            <div class="form-group">
+              <label>Confirm New Password</label>
+              <input type="password" id="confirmPassword" placeholder="Confirm new password" />
+            </div>
+            <button class="btn btn-primary" style="width:auto; padding:12px 28px;" onclick="savePassword()">
+              🔒 Change Password
+            </button>
+          </div>
+
+          <div style="height:1px; background:var(--border); margin:32px 0;"></div>
+
+          <!-- DANGER ZONE -->
+          <h3 class="profile-card-title" style="color:var(--danger);">Danger Zone</h3>
+          <p style="color:var(--text-secondary); font-size:14px; margin-bottom:16px; font-weight:300;">
+            Once you log out from all devices, you'll need to sign in again everywhere.
+          </p>
+          <button class="btn btn-danger" style="width:auto; padding:11px 24px;" onclick="logoutAll()">
+            🚪 Logout & Clear Session
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/profile.js"></script>
+  <script>
+    // Redirect if not logged in
+    if (!isLoggedIn()) window.location.href = 'login.html';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('logoutLink')?.addEventListener('click', () => {
+        removeToken();
+        window.location.href = 'login.html';
+      });
+      document.getElementById('mobileLogoutLink')?.addEventListener('click', () => {
+        removeToken();
+        window.location.href = 'login.html';
+      });
+    });
+
+    const toggleMenu = () => {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    };
+  </script>
+
+</body>
+</html>
