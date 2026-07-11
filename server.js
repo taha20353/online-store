@@ -32,7 +32,9 @@ const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/orders');
 const adminRoutes = require('./routes/admin');
 const reviewRoutes = require('./routes/reviews');
+const profileRoutes = require('./routes/profile');
 
+app.use('/profile', profileRoutes);
 app.use('/products', productRoutes);
 app.use('/auth', authRoutes);
 app.use('/cart', cartRoutes);
