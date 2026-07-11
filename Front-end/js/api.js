@@ -261,14 +261,64 @@ adminDeleteCategory: async (id) => {
   return res.json();
 },
 
-getProfile: async () => {
+// ─── NEW: profile API ───
+  getProfile: async () => {
     const res = await fetch(`${API_URL}/profile`, {
       headers: authHeaders()
     });
     return res.json();
   },
 
-  // ... rest of profile methods
+  updateProfile: async (data) => {
+    const res = await fetch(`${API_URL}/profile`, {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  },
+
+  updateProfilePicture: async (formData) => {
+    const res = await fetch(`${API_URL}/profile/picture`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${getToken()}` },
+      body: formData
+    });
+    return res.json();
+  },
+
+  changePassword: async (currentPassword, newPassword) => {
+    const res = await fetch(`${API_URL}/profile/password`, {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify({ currentPassword, newPassword })
+    });
+    return res.json();
+  },
+
+  getAddresses: async () => {
+    const res = await fetch(`${API_URL}/profile/addresses`, {
+      headers: authHeaders()
+    });
+    return res.json();
+  },
+
+  addAddress: async (data) => {
+    const res = await fetch(`${API_URL}/profile/addresses`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  },
+
+  deleteAddress: async (id) => {
+    const res = await fetch(`${API_URL}/profile/addresses/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    return res.json();
+  },
 
   setDefaultAddress: async (id) => {
     const res = await fetch(`${API_URL}/profile/addresses/${id}/default`, {

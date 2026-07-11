@@ -8,7 +8,12 @@ const passport = require('passport');
 const db = require('./config/db');
 
 const app = express();
-app.use(cors());
+// ─── CHANGED: update CORS to allow all origins ───
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Session middleware
