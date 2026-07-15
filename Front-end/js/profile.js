@@ -13,10 +13,10 @@ const loadProfile = async () => {
   // Update avatar
   const avatar = document.getElementById('profileAvatar');
   if (profileData.profile_picture) {
-    avatar.innerHTML = `<img src="${profileData.profile_picture}" 
-      style="width:100%; height:100%; object-fit:cover; border-radius:50%;" />`;
-  } else {
-    avatar.textContent = profileData.name.charAt(0).toUpperCase();
+    const navAvatar = document.getElementById('navAvatar');
+    const dropdownAvatar = document.getElementById('dropdownAvatar');
+    if (navAvatar) navAvatar.innerHTML = `<img src="${profileData.profile_picture}" style="width:100%;height:100%;object-fit:cover;" />`;
+    if (dropdownAvatar) dropdownAvatar.innerHTML = `<img src="${profileData.profile_picture}" style="width:100%;height:100%;object-fit:cover;" />`;
   }
 
   // Fill form fields
