@@ -56,7 +56,7 @@ const login = (req, res) => {
     res.status(200).json({
       message: '✅ Login successful!',
       token,
-      user: { id: user.id, name: user.name, email: user.email }
+      user: { id: user.id, name: user.name, email: user.email, role: user.role, profile_picture: user.profile_picture }
     });
   });
 };
