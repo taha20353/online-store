@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Online Store</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body>
 
   <!-- CART SIDE PANEL -->
@@ -28,9 +32,31 @@
       <a href="index.html">Products</a>
       <a href="cart.html">Cart</a>
       <a href="orders.html">Orders</a>
-      <a href="login.html" id="loginLink">Login</a>
-      <a href="#" id="logoutLink" style="display:none;">Logout</a>
-      <a href="profile.html">Profile</a>
+
+      <!-- Not logged in -->
+      <a href="login.html" id="loginLink" class="nav-login-btn">Login</a>
+
+      <!-- Logged in — avatar dropdown -->
+      <div class="nav-avatar-wrap" id="avatarWrap" style="display:none;">
+        <div class="nav-avatar" id="navAvatar" onclick="toggleDropdown()">T</div>
+        <div class="nav-dropdown" id="navDropdown">
+          <div class="nav-dropdown-header">
+            <div class="dropdown-avatar" id="dropdownAvatar">T</div>
+            <div>
+              <div class="dropdown-name" id="dropdownName">User</div>
+              <div class="dropdown-email" id="dropdownEmail"></div>
+            </div>
+          </div>
+          <div class="nav-dropdown-divider"></div>
+          <a href="profile.html" class="nav-dropdown-item">👤 My Profile</a>
+          <a href="orders.html" class="nav-dropdown-item">📦 My Orders</a>
+          <a href="cart.html" class="nav-dropdown-item">🛒 My Cart</a>
+          <div class="nav-dropdown-divider"></div>
+          <a href="admin/index.html" class="nav-dropdown-item admin-item" id="adminLink" style="display:none;">⚙️ Admin
+            Panel</a>
+          <button class="nav-dropdown-item logout-item" onclick="handleLogout()">🚪 Logout</button>
+        </div>
+      </div>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()">
       <span></span><span></span><span></span>
@@ -140,6 +166,7 @@
 
   <script src="js/api.js"></script>
   <script src="js/products.js"></script>
+  <script src="js/navbar.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       if (isLoggedIn()) {
@@ -185,4 +212,5 @@
   </script>
 
 </body>
+
 </html>

@@ -22,14 +22,35 @@
 
   <!-- NAVBAR -->
   <nav>
-    <a href="index.html" class="logo">🛒 Online Store</a>
     <div class="nav-links">
       <a href="index.html">Products</a>
       <a href="cart.html">Cart</a>
       <a href="orders.html">Orders</a>
-      <a href="login.html" id="loginLink">Login</a>
-      <a href="#" id="logoutLink" style="display:none;">Logout</a>
-      <a href="profile.html">Profile</a>
+
+      <!-- Not logged in -->
+      <a href="login.html" id="loginLink" class="nav-login-btn">Login</a>
+
+      <!-- Logged in — avatar dropdown -->
+      <div class="nav-avatar-wrap" id="avatarWrap" style="display:none;">
+        <div class="nav-avatar" id="navAvatar" onclick="toggleDropdown()">T</div>
+        <div class="nav-dropdown" id="navDropdown">
+          <div class="nav-dropdown-header">
+            <div class="dropdown-avatar" id="dropdownAvatar">T</div>
+            <div>
+              <div class="dropdown-name" id="dropdownName">User</div>
+              <div class="dropdown-email" id="dropdownEmail"></div>
+            </div>
+          </div>
+          <div class="nav-dropdown-divider"></div>
+          <a href="profile.html" class="nav-dropdown-item">👤 My Profile</a>
+          <a href="orders.html" class="nav-dropdown-item">📦 My Orders</a>
+          <a href="cart.html" class="nav-dropdown-item">🛒 My Cart</a>
+          <div class="nav-dropdown-divider"></div>
+          <a href="admin/index.html" class="nav-dropdown-item admin-item" id="adminLink" style="display:none;">⚙️ Admin
+            Panel</a>
+          <button class="nav-dropdown-item logout-item" onclick="handleLogout()">🚪 Logout</button>
+        </div>
+      </div>
     </div>
 
     <!-- Hamburger for mobile -->
@@ -59,6 +80,7 @@
 
   <script src="js/api.js"></script>
   <script src="js/product.js"></script>
+  <script src="js/navbar.js"></script>
   <script>
     if (isLoggedIn()) {
       document.getElementById('loginLink').style.display = 'none';
